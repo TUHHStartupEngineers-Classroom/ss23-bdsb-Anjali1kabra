@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Anjali Kabra" />
+
+
+<title>02 Data acquisition</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MyLabJournal</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Index</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Journal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_tidyverse.html">01 Tidyverse</a>
+    </li>
+    <li>
+      <a href="02_data_acquisition.html">02 Data Acquisition</a>
+    </li>
+    <li>
+      <a href="03_data_wrangling.html">03 Data Wrangling</a>
+    </li>
+    <li>
+      <a href="04_data_visualization.html">04 Data Visualization</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="05_class_notes.html">Class notes</a>
+</li>
+<li>
+  <a href="06_links.html">Links</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">02 Data acquisition</h1>
+<h4 class="author">Anjali Kabra</h4>
+<h4 class="date">2023-04</h4>
+
+</div>
+
+
+<div id="data-acquisition" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Data Acquisition</h1>
+<p>Last compiled: 2023-05-23</p>
+<p>I learned how to obtain data via an API or the html/css of a
+website</p>
+</div>
+<div id="challange-nr.-1" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Challange Nr. 1</h1>
+<p>I enjoy watching twitch at the end of the day, so I decided to make a
+program that requests the twitch api to give me the currently streaming
+top 5 streamers. (The request returns the top 20)</p>
+<div id="twitch.tv-api" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Twitch.tv API</h2>
+<pre class="r"><code>library(httr)
+library(tidyverse)
+
+client_id = Sys.getenv(&quot;client_id&quot;)
+client_secret = Sys.getenv(&quot;client_secret&quot;)
+
+url &lt;- &quot;https://id.twitch.tv/oauth2/token&quot;
+query &lt;- list(client_id, client_secret, &quot;client_credentials&quot;)
+names(query) &lt;- c(&quot;client_id&quot;, &quot;client_secret&quot;, &quot;grant_type&quot;)
+
+
+upload &lt;- POST(url,
+     query = query) %&gt;% 
+  content()
+
+
+add_headers(&#39;Client-ID&#39; = client_id,
+            Authorization = paste0(&quot;Bearer &quot;, upload$access_token)) %&gt;%
+    set_config()
+
+url = &#39;https://api.twitch.tv/helix/streams&#39;
+query &lt;- list(20,      #first
+              NULL,    #after
+              NULL,    #before
+              NULL,    #community_id
+              NULL,    #game_id
+              NULL,    #language
+              NULL,    #type
+              NULL,    #user_id
+              NULL)    #user_login
+names(query) &lt;- c(&#39;first&#39;,
+                  &#39;after&#39;,
+                  &#39;before&#39;,
+                  &#39;community_id&#39;,
+                  &#39;game_id&#39;,
+                  &#39;language&#39;,
+                  &#39;type&#39;,
+                  &#39;user_id&#39;,
+                  &#39;user_login&#39;)
+
+streams &lt;- GET(url,
+               query) %&gt;%
+  content()
+# Streams$Data is list of lists. We want to feed it to as_tibble, for that we need to make a list of
+# vectors (when I used list of lists, the output was the type of all values, not the actual values themselves.
+#To make vectors, we need lists that have elements of of only the same type. The same-index-elements of the
+#inner lists correspond to the same feature (like game_id) so we want to transpose our matrix(list), so that we can
+# get values of the same type in each list. Now we can make the lists into vectors
+data &lt;- streams$data %&gt;% 
+  transpose() %&gt;%         
+  simplify_all() %&gt;%
+  as_tibble()
+data %&gt;%
+  head(n=5) </code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["user_id"],"name":[2],"type":["chr"],"align":["left"]},{"label":["user_login"],"name":[3],"type":["chr"],"align":["left"]},{"label":["user_name"],"name":[4],"type":["chr"],"align":["left"]},{"label":["game_id"],"name":[5],"type":["chr"],"align":["left"]},{"label":["game_name"],"name":[6],"type":["chr"],"align":["left"]},{"label":["type"],"name":[7],"type":["chr"],"align":["left"]},{"label":["title"],"name":[8],"type":["chr"],"align":["left"]},{"label":["viewer_count"],"name":[9],"type":["int"],"align":["right"]},{"label":["started_at"],"name":[10],"type":["chr"],"align":["left"]},{"label":["language"],"name":[11],"type":["chr"],"align":["left"]},{"label":["thumbnail_url"],"name":[12],"type":["chr"],"align":["left"]},{"label":["tag_ids"],"name":[13],"type":["list"],"align":["right"]},{"label":["is_mature"],"name":[14],"type":["lgl"],"align":["right"]}],"data":[{"1":"45382025788","2":"83232866","3":"ibai","4":"ibai","5":"1869092879","6":"FIFA 22","7":"live","8":"PORCINOS FC | ROAD TO QUINTA DIVISION | IBAISINHO EL PICHICHI","9":"72143","10":"2022-05-10T19:53:53Z","11":"es","12":"https://static-cdn.jtvnw.net/previews-ttv/live_user_ibai-{width}x{height}.jpg","13":"<list [1]>","14":"FALSE"},{"1":"46373253101","2":"26261471","3":"asmongold","4":"Asmongold","5":"791968461","6":"ALTF4","7":"live","8":"BIG DAY--NEWS--ADDON BANS--DRAGONFLIGHT NEWS--BAN APPEALS?!--ALT F4 TODAY","9":"55187","10":"2022-05-10T14:33:15Z","11":"en","12":"https://static-cdn.jtvnw.net/previews-ttv/live_user_asmongold-{width}x{height}.jpg","13":"<list [1]>","14":"FALSE"},{"1":"39387096296","2":"72550899","3":"roshtein","4":"ROSHTEIN","5":"498566","6":"Slots","7":"live","8":"18+ OPENING 89 HUUUUUUGE BONUSES - !HUNT FOR LIST | !SOCIALS FOR MILLIONS IN GIVEAWAY!","9":"36459","10":"2022-05-10T13:27:25Z","11":"en","12":"https://static-cdn.jtvnw.net/previews-ttv/live_user_roshtein-{width}x{height}.jpg","13":"<list [1]>","14":"TRUE"},{"1":"46374041117","2":"207813352","3":"hasanabi","4":"HasanAbi","5":"509658","6":"Just Chatting","7":"live","8":"YOUNG THUG AND GUNNA ARREST. ARREST NANCY PELOSI INSTEAD.","9":"33550","10":"2022-05-10T18:04:48Z","11":"en","12":"https://static-cdn.jtvnw.net/previews-ttv/live_user_hasanabi-{width}x{height}.jpg","13":"<list [5]>","14":"FALSE"},{"1":"45382042124","2":"155601320","3":"jltomy","4":"JLTomy","5":"32982","6":"Grand Theft Auto V","7":"live","8":"Kenan retourne faire du sale !","9":"32980","10":"2022-05-10T19:56:39Z","11":"fr","12":"https://static-cdn.jtvnw.net/previews-ttv/live_user_jltomy-{width}x{height}.jpg","13":"<list [1]>","14":"FALSE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Figure 1: Top 5 streams</p>
+</div>
+</div>
+<div id="challange-nr.-2" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Challange Nr. 2</h1>
+<p>Scraping rosebike mountainbikes from <a
+href="https://www.rosebikes.com/bikes/mtb"
+class="uri">https://www.rosebikes.com/bikes/mtb</a>.</p>
+<div id="rosebike" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Rosebike</h2>
+<pre class="r"><code>library(tidyverse) # Main Package - Loads dplyr, purrr, etc.
+library(rvest)     # HTML Hacking &amp; Web Scraping
+library(xopen)     # Quickly opening URLs
+library(jsonlite)  # converts JSON files to R objects
+library(glue)      # concatenate strings
+library(stringi)   # character string/text processing
+library(purrr)
+
+extract_price &lt;- function(text) {
+  price_str &lt;- str_extract(text, &quot;[0-9]*,*[0-9]*\\.[0-9]*&quot;)
+  price_str &lt;- gsub(&quot;,&quot;, &quot;&quot;, as.character(price_str))
+  return(price_str)
+}
+
+make_url &lt;- function(my_string){
+  base_url &lt;- &quot;https://www.rosebikes.com&quot;
+  glue(&quot;{base_url}{my_string}&quot;)
+}
+
+#all model names have numbers in them
+filter_model_names &lt;- function(model_name) {
+  condition1 &lt;- str_detect(model_name, &quot;[0-9]&quot;)
+  condition2 &lt;- str_detect(model_name, &quot;SOUL FIRE&quot;)
+  if (condition1 | condition2) {
+    return(model_name)
+  }
+  return(NULL)
+}
+
+extract_models &lt;- function(model_url) {
+  
+  css_class_model_name &lt;- &quot;.basic-headline__title&quot;
+  # This part extracts the model names
+  html_model_names &lt;- read_html(model_url) %&gt;%
+    html_nodes(css = css_class_model_name) %&gt;%
+    map(html_text) %&gt;%
+    map(filter_model_names)
+  model_names &lt;- unique(unlist(html_model_names))
+  
+  
+  #This parts extracts the model price
+  css_class_model_price = &quot;.catalog-category-model__price-current-value&quot;
+  model_prices &lt;- read_html(model_url) %&gt;%
+    html_nodes(css = css_class_model_price) %&gt;%
+    map(html_text) %&gt;%
+    map(extract_price)
+  
+  #The last prices are the prices of the models
+  while (length(model_prices) &gt; length(model_names)) {
+    model_prices[1] &lt;- NULL
+  }
+  model_prices &lt;- model_prices %&gt;%
+    unlist() %&gt;%
+    as.double()
+  
+  models_tbl &lt;- tibble(model_names, model_prices)
+  
+}
+
+
+extract_models_from_category_list_mtb &lt;- function(bike_url){
+  
+  bike_price_xml_path = &quot;catalog-category-bikes__price-title&quot;
+  category &lt;- str_extract(bike_url, &quot;(?&lt;=/)[a-z]*$&quot;)
+  css_class &lt;- &quot;.catalog-category-bikes__button&quot;
+  
+  html_bike &lt;- read_html(bike_url)
+  
+  html_models_urls &lt;- html_bike %&gt;%
+    html_nodes(css = css_class) %&gt;%
+    html_attr(&quot;href&quot;) %&gt;%
+    map(make_url)
+  
+  models_in_category_list &lt;- map(html_models_urls, extract_models)
+  models_in_category_list
+  models_in_category_tbl &lt;- models_in_category_list[[1]]
+  for (i in 2:length(models_in_category_list)) {
+    models_in_category_tbl &lt;- add_row(models_in_category_tbl, 
+                                      model_names = models_in_category_list[[i]]$model_names,
+                                      model_prices = models_in_category_list[[i]]$model_prices)
+  }
+  
+  category = rep(category, times = length(models_in_category_tbl$model_names))
+  models_in_category_tbl$category &lt;- category
+  return(models_in_category_tbl)
+}
+
+
+home_url &lt;- &quot;https://www.rosebikes.com/bikes&quot;
+
+html_home &lt;- read_html(home_url)
+html_categories_urls &lt;- html_home %&gt;%
+  html_nodes(css = &quot;.catalog-navigation__link&quot;) %&gt;%
+  html_attr(&quot;href&quot;) %&gt;%
+  map(make_url)
+
+
+tbl &lt;- html_categories_urls[[1]] %&gt;%
+  extract_models_from_category_list_mtb
+tbl </code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["model_names"],"name":[1],"type":["chr"],"align":["left"]},{"label":["model_prices"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["category"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"COUNT SOLO 1","2":"849","3":"mtb"},{"1":"COUNT SOLO 2","2":"999","3":"mtb"},{"1":"COUNT SOLO 3","2":"1199","3":"mtb"},{"1":"PSYCHO PATH 1","2":"1799","3":"mtb"},{"1":"PSYCHO PATH 2","2":"2199","3":"mtb"},{"1":"PSYCHO PATH 3","2":"2599","3":"mtb"},{"1":"THRILL HILL 1","2":"2999","3":"mtb"},{"1":"THRILL HILL 2","2":"3349","3":"mtb"},{"1":"THRILL HILL 3","2":"3999","3":"mtb"},{"1":"THRILL HILL 4","2":"5999","3":"mtb"},{"1":"THRILL HILL 5","2":"6999","3":"mtb"},{"1":"BONERO 1","2":"1499","3":"mtb"},{"1":"BONERO 2","2":"1799","3":"mtb"},{"1":"BONERO 3","2":"2199","3":"mtb"},{"1":"ROOT MILLER 1","2":"2399","3":"mtb"},{"1":"ROOT MILLER 2","2":"3199","3":"mtb"},{"1":"ROOT MILLER 3","2":"3999","3":"mtb"},{"1":"GROUND CONTROL 1","2":"1999","3":"mtb"},{"1":"GROUND CONTROL 2","2":"2399","3":"mtb"},{"1":"GROUND CONTROL 3","2":"2899","3":"mtb"},{"1":"GROUND CONTROL 4","2":"3999","3":"mtb"},{"1":"SOUL FIRE 1","2":"2349","3":"mtb"},{"1":"SOUL FIRE DH","2":"2899","3":"mtb"},{"1":"SOUL FIRE 2","2":"3049","3":"mtb"},{"1":"SOUL FIRE 3","2":"4099","3":"mtb"},{"1":"THE BRUCE 1","2":"999","3":"mtb"},{"1":"THE BRUCE 2","2":"1399","3":"mtb"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Figure 2: Model names and Model prices (Prices are in Euro)</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "hash": "85740143b468418809f97ef4e862214a",
+  "result": {
+    "markdown": "---\ntitle: \"MyLabJournal\"\noutput: html_document\n---\n\n\n<div style=\"padding-top: 30px;\"></div>\n\n![](images/logo.png)\n\n# **My Lab Journal**\n\nThis is a template example for lab journaling. Students in the data science courses at the Institute of Entrepreneurship will use this template to learn R for business analytics. Students can replace this text as they wish.\n\n## How to use\n\n1. Accept the assignment and get your own github repo.\n\n2. Blog/journal what you are doing in R, by editing the `.Rmd` files. \n\n3. See the links page for lots of helpful links on learning R.\n\n4. Change everything to make it your own.",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

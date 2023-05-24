@@ -72,9 +72,9 @@
   {
     "objectID": "index.html#how-to-use",
     "href": "index.html#how-to-use",
-    "title": "My Lab Journal",
+    "title": "MyLabJournal",
     "section": "How to use",
-    "text": "How to use\n\nAccept the assignment and get your own github repo.\nBlog/journal what you are doing in R, by editing the .qmd files.\nSee the links page for lots of helpful links on learning R.\nChange everything to make it your own.\nMake sure to render you website everytime before you want to upload changes"
+    "text": "How to use\n\nAccept the assignment and get your own github repo.\nBlog/journal what you are doing in R, by editing the .Rmd files.\nSee the links page for lots of helpful links on learning R.\nChange everything to make it your own."
   },
   {
     "objectID": "content/01_journal/01_tidyverse.html#including-plots",
